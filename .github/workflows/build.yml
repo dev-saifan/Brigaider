@@ -3,14 +3,14 @@ name: Release Windows Exe
 on:
   push:
     tags:
-      - 'v1*' # Triggers whenever you push a tag starting with v1 (e.g., v1.0.0, v1.1.0)
+      - 'v1*' # Triggers on tags like v1.0.0
+  workflow_dispatch: # Adds a manual "Run workflow" button on GitHub
 
 jobs:
   release:
     name: Build and Upload Release
     runs-on: ubuntu-latest
     
-    # Required permission to create releases and upload files
     permissions:
       contents: write
 

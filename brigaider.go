@@ -1,7 +1,9 @@
 package main
 
 import (
+	"crypto/sha256"
 	"crypto/tls"
+	"encoding/hex"
 	"flag"
 	"fmt"
 	"io"
@@ -16,9 +18,10 @@ import (
 )
 
 const (
-	Version      = "0.3.0"
-	SuCatalogURL = "https://swscan.apple.com/content/catalogs/others/index-11-10.15-10.14-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog"
-	SevenZipURL  = "https://github.com/ip7z/7zip/releases/download/26.06/7z2606-x64.exe"
+	Version        = "0.3.0"
+	SuCatalogURL   = "https://swscan.apple.com/content/catalogs/others/index-11-10.15-10.14-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog"
+	SevenZipURL    = "https://github.com/ip7z/7zip/releases/download/26.06/7z2606-x64.exe"
+	SevenZipSHA256 = "9b697f65ecc2d9b0152f5ee96d72dde522a7827690349d9307935dacf40f42ec"
 )
 
 type Options struct {
@@ -143,6 +146,27 @@ func downloadFile(url string, filepathStr string) error {
 	_, err = io.Copy(out, io.TeeReader(resp.Body, counter))
 	fmt.Fprint(os.Stderr, "\n")
 	return err
+}
+
+// verifyFileSHA256 checks if the file at filepathStr matches the expected SHA-256 hash.
+func verifyFileSHA256(filepathStr string, expectedHash string) error {
+	file, err := os.Open(filepathStr)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	hasher := sha256.New()
+	if _, err := io.Copy(hasher, file); err != nil {
+		return err
+	}
+
+	actualHash := hex.EncodeToString(hasher.Sum(nil))
+	if !strings.EqualFold(actualHash, expectedHash) {
+		return fmt.Errorf("SHA-256 mismatch!\nExpected: %s\nGot:      %s", expectedHash, actualHash)
+	}
+
+	return nil
 }
 
 func sevenzipExtract(arcfile string, command string, outDir string) error {

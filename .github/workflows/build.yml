@@ -1,4 +1,4 @@
-name: Release Windows Exe
+name: Release Windows Exe From Linux
 
 on:
   push:

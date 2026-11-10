@@ -23,7 +23,6 @@ const (
 	SevenZipSHA256 = "9b697f65ecc2d9b0152f5ee96d72dde522a7827690349d9307935dacf40f42ec"
 )
 
-// Active fallback catalog list covering modern macOS releases down to legacy versions
 var SuCatalogURLs = []string{
 	"https://swscan.apple.com/content/catalogs/others/index-14-13-12-10.16-10.15-10.14-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog",
 	"https://swscan.apple.com/content/catalogs/others/index-13-12-10.16-10.15-10.14-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog",
@@ -374,7 +373,3 @@ func main() {
 	status(fmt.Sprintf("Successfully fetched Apple catalog (%d bytes).", len(catalogData)))
 }
 ```[cite: 2]
-
-Now re-run your cross-compilation command[cite: 2]:
-```bash
-GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o brigaider.exe brigaider.go

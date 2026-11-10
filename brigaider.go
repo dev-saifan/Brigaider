@@ -246,6 +246,7 @@ func postInstallConfig() {
 }
 
 type matchFound struct{ path string }
+
 func (e matchFound) Error() string { return e.path }
 
 func findBootcampMSI(searchDir string) string {

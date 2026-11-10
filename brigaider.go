@@ -120,7 +120,6 @@ func (wc *WriteCounter) printProgress() {
 	}
 }
 
-// downloadCatalog iterates through modern Apple sucatalog URLs using a required User-Agent header
 func downloadCatalog() ([]byte, error) {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
@@ -134,7 +133,6 @@ func downloadCatalog() ([]byte, error) {
 			continue
 		}
 
-		// Apple endpoints require a SoftwareUpdate client user-agent string
 		req.Header.Set("User-Agent", "SoftwareUpdate/1.0 (Macintosh; Intel Mac OS X 10_15_7)")
 
 		resp, err := client.Do(req)
@@ -368,7 +366,6 @@ func main() {
 
 	status(fmt.Sprintf("Using Mac model(s): %s.", strings.Join(models, ", ")))
 
-	// Fetch catalog with automatic fallback URLs and proper headers
 	catalogData, err := downloadCatalog()
 	if err != nil {
 		log.Fatalf("Error downloading catalog: %v", err)
@@ -377,3 +374,7 @@ func main() {
 	status(fmt.Sprintf("Successfully fetched Apple catalog (%d bytes).", len(catalogData)))
 }
 ```[cite: 2]
+
+Now re-run your cross-compilation command[cite: 2]:
+```bash
+GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o brigaider.exe brigaider.go
